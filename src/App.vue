@@ -16,11 +16,11 @@ import HomeView from './views/HomeView.vue';
     </div>
   </header>
 
-  <RouterView />
+  
 </template> -->
 
 <template>
-    <HomeView />
+    <RouterView />
 </template>
 
 

@@ -15,6 +15,16 @@ const getUsers = async () => {
     }
 }
 
+const deleteUser = async (id) => {
+    try {
+        const response = await Axios.delete(link + "/remove/" + id);
+        console.log(response.data);
+        await getUsers();
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const dateFormatter = (date) => {
     const formatted = new Date(date).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -44,6 +54,7 @@ onMounted(() => {
                     <th>Email</th>
                     <th>Created At</th>
                     <th>Updated At</th>
+                    <td>Actions</td>
                 </tr>
             </thead>
             <tbody>
@@ -54,11 +65,14 @@ onMounted(() => {
                     <td>{{ user.email }}</td>
                     <td>{{ dateFormatter(user.createdAt) }}</td>
                     <td>{{ dateFormatter(user.updatedAt) }}</td>
+                    <td>
+                        <button class="update">Edit</button>
+                        <button class="delete" @click="deleteUser(user.id)">Delete</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
-
 </template>
 
 <style>
@@ -83,4 +97,13 @@ th{
     color:black;
 }
 
+.delete{
+    background-color: brown;
+    color: white;
+    margin-left:5px;
+}
+
+button{
+    cursor:pointer;
+}
 </style>
