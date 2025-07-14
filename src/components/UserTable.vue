@@ -1,9 +1,11 @@
 <script setup>
 import Axios from "axios"
 import { ref, onMounted } from 'vue'
+import { useRouter } from "vue-router";
 
 const users = ref([]);
 const link = "http://localhost:8080/user"
+const router = useRouter();
 
 const getUsers = async () => {
     try {
@@ -13,6 +15,20 @@ const getUsers = async () => {
     } catch (err) {
         console.log(err);
     }
+}
+
+const deleteUser = async (id) => {
+    try {
+        const response = await Axios.delete(link + "/remove/" + id);
+        console.log(response.data);
+        await getUsers();
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const updateUser = (id) => {
+    router.push('/update/' + id);
 }
 
 const dateFormatter = (date) => {
@@ -44,6 +60,7 @@ onMounted(() => {
                     <th>Email</th>
                     <th>Created At</th>
                     <th>Updated At</th>
+                    <td>Actions</td>
                 </tr>
             </thead>
             <tbody>
@@ -54,11 +71,14 @@ onMounted(() => {
                     <td>{{ user.email }}</td>
                     <td>{{ dateFormatter(user.createdAt) }}</td>
                     <td>{{ dateFormatter(user.updatedAt) }}</td>
+                    <td>
+                        <button class="update" @click="updateUser(user.id)">Edit</button>
+                        <button class="delete" @click="deleteUser(user.id)">Delete</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
-
 </template>
 
 <style>
@@ -83,4 +103,13 @@ th{
     color:black;
 }
 
+.delete{
+    background-color: brown;
+    color: white;
+    margin-left:5px;
+}
+
+button{
+    cursor:pointer;
+}
 </style>

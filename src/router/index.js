@@ -17,6 +17,12 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue'),
     },
+    {
+      path: '/update/:id',
+      name: 'update',
+      component: () => import('../components/UserForm.vue'),
+      props: true,
+    }
   ],
 })
 
