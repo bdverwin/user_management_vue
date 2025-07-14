@@ -18,9 +18,10 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue'),
     },
     {
-      path: '/update',
+      path: '/update/:id',
       name: 'update',
       component: () => import('../components/UserForm.vue'),
+      props: true,
     }
   ],
 })

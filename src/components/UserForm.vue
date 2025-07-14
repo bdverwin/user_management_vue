@@ -1,6 +1,42 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios';
+import { useRoute, useRouter } from 'vue-router';
 
+const link = "http://localhost:8080/user";
+const user = ref([]);
+const updateValue = ref({
+    firstName : '',
+    lastName : '',
+    email : '',
+})
+const route = useRoute();
+const router = useRouter();
+const id = route.params.id;
+
+const updateUser = async () => {
+    try {
+        const response = await axios.put(link + '/update/' + id, updateValue.value)
+        window.alert(response.data.message);
+        router.push('/');
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+onMounted(async () => {
+    try {
+        const response = await axios.get(link + '/' + id)
+        const {firstName, lastName, email} = response.data;
+        updateValue.value.firstName = firstName;
+        updateValue.value.lastName = lastName;
+        updateValue.value.email = email;
+        console.log(updateValue.value);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 </script>
 
@@ -8,15 +44,15 @@ import { ref } from 'vue'
 <template>
     <div class="form">
         <h1>USER FORM</h1>
-        <form>
+        <form @submit.prevent="updateUser">
             <label>First name
-                <input type="text" name="firstName">
+                <input v-model="updateValue.firstName">
             </label>
             <label>Last name
-                <input type="text" name="lastName">
+                <input v-model="updateValue.lastName">
             </label>
             <label>Email
-                <input type="email" name="Email">
+                <input v-model="updateValue.email">
             </label>
             <button type="submit" class="submit">SUBMIT</button>
         </form>

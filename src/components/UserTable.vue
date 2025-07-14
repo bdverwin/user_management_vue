@@ -1,9 +1,11 @@
 <script setup>
 import Axios from "axios"
 import { ref, onMounted } from 'vue'
+import { useRouter } from "vue-router";
 
 const users = ref([]);
 const link = "http://localhost:8080/user"
+const router = useRouter();
 
 const getUsers = async () => {
     try {
@@ -23,6 +25,10 @@ const deleteUser = async (id) => {
     } catch (error) {
         console.log(error);
     }
+}
+
+const updateUser = (id) => {
+    router.push('/update/' + id);
 }
 
 const dateFormatter = (date) => {
@@ -66,7 +72,7 @@ onMounted(() => {
                     <td>{{ dateFormatter(user.createdAt) }}</td>
                     <td>{{ dateFormatter(user.updatedAt) }}</td>
                     <td>
-                        <button class="update">Edit</button>
+                        <button class="update" @click="updateUser(user.id)">Edit</button>
                         <button class="delete" @click="deleteUser(user.id)">Delete</button>
                     </td>
                 </tr>
