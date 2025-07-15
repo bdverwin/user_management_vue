@@ -41,6 +41,10 @@ const dateFormatter = (date) => {
     return formatted;
 }
 
+const addUser = () => {
+    router.push('/create')
+}
+
 onMounted(() => {
     getUsers();
 })
@@ -76,6 +80,9 @@ onMounted(() => {
                         <button class="delete" @click="deleteUser(user.id)">Delete</button>
                     </td>
                 </tr>
+                <tr>
+                    <td colspan="7" class="addUser" @click="addUser">Add User</td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -110,6 +117,12 @@ th{
 }
 
 button{
+    cursor:pointer;
+}
+
+td.addUser{
+    background-color: rgb(72, 138, 116);
+    color:black;
     cursor:pointer;
 }
 </style>
