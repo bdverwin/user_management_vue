@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
 
 const link = "http://localhost:8080/user";
-const user = ref([]);
 const updateValue = ref({
     firstName : '',
     lastName : '',
@@ -12,7 +11,7 @@ const updateValue = ref({
 })
 const route = useRoute();
 const router = useRouter();
-const id = route.params.id;
+const id = route.params.id != null ? route.params.id : '';
 
 const updateUser = async () => {
     try {
@@ -24,18 +23,40 @@ const updateUser = async () => {
     }
 }
 
+const submitForm = async () => {
+    if(id){
+        try {
+            const response = await axios.put(link + '/update/' + id, updateValue.value)
+            window.alert(response.data.message);
+            router.push('/');
+        } catch (error) {
+            console.log(error);
+        }
+    }else{
+        try {
+            const response = await axios.post(link + '/create', updateValue.value)
+            window.alert(response.data.message);
+            router.push('/');
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
 
 onMounted(async () => {
-    try {
-        const response = await axios.get(link + '/' + id)
-        const {firstName, lastName, email} = response.data;
-        updateValue.value.firstName = firstName;
-        updateValue.value.lastName = lastName;
-        updateValue.value.email = email;
-        console.log(updateValue.value);
-    } catch (error) {
-        console.log(error);
-    }
+    if(id){
+        try {
+            const response = await axios.get(link + '/' + id)
+            const {firstName, lastName, email} = response.data;
+            updateValue.value.firstName = firstName;
+            updateValue.value.lastName = lastName;
+            updateValue.value.email = email;
+            console.log(updateValue.value);
+        } catch (error) {
+            console.log(error);
+        }
+    } 
 })
 
 </script>
@@ -44,7 +65,7 @@ onMounted(async () => {
 <template>
     <div class="form">
         <h1>USER FORM</h1>
-        <form @submit.prevent="updateUser">
+        <form @submit.prevent="submitForm">
             <label>First name
                 <input v-model="updateValue.firstName">
             </label>
@@ -56,6 +77,7 @@ onMounted(async () => {
             </label>
             <button type="submit" class="submit">SUBMIT</button>
         </form>
+        <a @click="() => router.push('/')">Back</a>
     </div>
 </template>
 
@@ -96,6 +118,10 @@ div.form button.submit{
     padding:10px;
     max-width: 200px;
     margin-top:30px;
+}
+
+a{
+    cursor:pointer;
 }
 
 </style>
